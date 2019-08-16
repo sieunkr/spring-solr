@@ -69,6 +69,31 @@ public class SolrQueryTests {
 
 
     @Test
+    public void 정렬_조정이_잘되는가(){
+
+        신규문서_색인();
+
+        SolrQuery query = new SolrQuery();
+        query.setQuery("name:라떼"); //query.set("q", "name:라떼");
+        query.setRows(2);
+        query.setSort("price", SolrQuery.ORDER.desc);
+
+        QueryResponse response = null;
+        try {
+            response = solrClient.query(query);
+        } catch (SolrServerException | IOException e) {
+            e.printStackTrace();
+        }
+
+        //SolrDocumentList docList = response.getResults();
+        List<Coffee> coffees = response.getBeans(Coffee.class);
+
+        Assert.assertEquals(2, coffees.size());
+        Assert.assertEquals("녹차 라떼", coffees.get(0).getName());
+    }
+
+
+    @Test
     public void 구문_쿼리_검색이_잘되는가(){
 
         신규문서_색인();
